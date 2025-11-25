@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Sonu Bhiya Alwar Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .base-url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .get { background: #28a745; color: white; }
+        .post { background: #007bff; color: white; }
+        .put { background: #ffc107; color: #333; }
+        .delete { background: #dc3545; color: white; }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .description {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .auth-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: #feca57;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .param-table th,
+        .param-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .param-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .param-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .required {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #666;
+        }
+
+        .response-example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #4caf50;
+        }
+
+        .error-example {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #f44336;
+        }
+
+        .nav {
+            position: sticky;
+            top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .nav a {
+            display: block;
+            padding: 8px 0;
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #764ba2;
+        }
+
+        .toc {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .code-block {
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 API Documentation</h1>
+            <p class="subtitle">Sonu Bhiya Alwar Project - Backend API</p>
+            <div class="base-url">
+                Base URL: <span id="baseUrl">http://localhost:5000</span>
+            </div>
+        </header>
+
+        <div class="nav">
+            <h3 style="color: #667eea; margin-bottom: 15px;">📑 Table of Contents</h3>
+            <ul class="toc">
+                <li><a href="#auth">Authentication</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#inquiry">Inquiry</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#properties">Properties</a></li>
+            </ul>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="section" id="auth">
+            <h2 class="section-title">🔐 Authentication</h2>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/auth/register</span>
+                <p class="description">Register a new user</p>
+                
+                <h4>Request Body:</h4>
+                <table class="param-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>User's full name (min 2 characters)</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Valid email address</td>
+                    </tr>
+                    <tr>
+                        <td>password</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Password (min 6 characters)</td>
+                    </tr>
+                    <tr>
+                        <td>role</td>
+                        <td>String</td>
+                        <td class="optional">No</td>
+                        <td>User role: 'admin' or 'user' (default: 'user')</td>
+                    </tr>
+                </table>
+
+                <div class="code-block">{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "role": "user"
+}</div>
+
+                <div class="response-example">
+                    <strong>Success Response (201):</strong>
+                    <div class="code-block">{
+  "success": true,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "id": "user_id",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "user"
+    },
+    "token": "jwt_token_here"
+  }
+}</div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/auth/login</span>
+                <p class="description">Login user</p>
+                
+                <h4>Request Body:</h4>
+                <div class="code-block">{
+  "email": "john@example.com",
+  "password": "password123"
+}</div>
+
+                <div class="response-example">
+                    <strong>Success Response (200):</strong>
+                    <div class="code-block">{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": { "id": "...", "name": "...", "email": "...", "role": "..." },
+    "token": "jwt_token_here"
+  }
+}</div>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/auth/profile</span>
+                <span class="auth-badge">Auth Required</span>
+                <p class="description">Get current user profile</p>
+                
+                <h4>Headers:</h4>
+                <div class="code-block">Authorization: Bearer {token}</div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/auth/profile</span>
+                <span class="auth-badge">Auth Required</span>
+                <p class="description">Update user profile</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/auth/users</span>
+                <span class="auth-badge">Auth</span>
+                <span class="admin-badge">Admin</span>
+                <p class="description">Get all users (Admin only)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/auth/users/:id</span>
+                <span class="auth-badge">Auth</span>
+                <span class="admin-badge">Admin</span>
+                <p class="description">Delete user (Admin only)</p>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="section" id="contact">
+            <h2 class="section-title">📧 Contact</h2>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/contact</span>
+                <p class="description">Create a new contact (Public)</p>
+                
+                <h4>Request Body:</h4>
+                <div class="code-block">{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+1234567890",
+  "subject": "buying",
+  "message": "I am interested in buying a property"
+}</div>
+                <p><strong>Subject options:</strong> buying, selling, investment, valuation, other</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/contact</span>
+                <p class="description">Get all contacts (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/contact/:id</span>
+                <p class="description">Get contact by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/contact/:id</span>
+                <p class="description">Update contact (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/contact/:id</span>
+                <p class="description">Delete contact (Public)</p>
+            </div>
+        </div>
+
+        <!-- Blog Section -->
+        <div class="section" id="blog">
+            <h2 class="section-title">📝 Blog</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/blog</span>
+                <p class="description">Get all blogs (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/blog/:id</span>
+                <p class="description">Get blog by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/blog/createBlog</span>
+                <p class="description">Create a new blog</p>
+                
+                <h4>Request (multipart/form-data):</h4>
+                <table class="param-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                    </tr>
+                    <tr>
+                        <td>author</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                    </tr>
+                    <tr>
+                        <td>description</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                    </tr>
+                    <tr>
+                        <td>image</td>
+                        <td>File</td>
+                        <td class="required">Yes</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/blog/:id</span>
+                <p class="description">Update blog (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/blog/:id</span>
+                <p class="description">Delete blog (Public)</p>
+            </div>
+        </div>
+
+        <!-- Testimonials Section -->
+        <div class="section" id="testimonials">
+            <h2 class="section-title">⭐ Testimonials</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/testimonials</span>
+                <p class="description">Get all testimonials (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/testimonials/:id</span>
+                <p class="description">Get testimonial by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/testimonials</span>
+                <p class="description">Create testimonial (Public)</p>
+                
+                <h4>Request (multipart/form-data):</h4>
+                <div class="code-block">{
+  "name": "John Doe",
+  "title": "Happy Customer",
+  "text": "Great service!",
+  "rating": 5,
+  "image": [file]
+}</div>
+                <p><strong>Rating:</strong> Must be between 1 and 5</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/testimonials/:id</span>
+                <p class="description">Update testimonial (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/testimonials/:id</span>
+                <p class="description">Delete testimonial (Public)</p>
+            </div>
+        </div>
+
+        <!-- Inquiry Section -->
+        <div class="section" id="inquiry">
+            <h2 class="section-title">❓ Inquiry</h2>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/inquiry/createInquiry</span>
+                <p class="description">Create inquiry (Public)</p>
+                
+                <h4>Request Body:</h4>
+                <div class="code-block">{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "+1234567890",
+  "message": "I want to know more about..."
+}</div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/inquiry</span>
+                <p class="description">Get all inquiries (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/inquiry/getInquiryById/:id</span>
+                <p class="description">Get inquiry by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/inquiry/updateInquiry/:id</span>
+                <p class="description">Update inquiry (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/inquiry/deleteInquiry/:id</span>
+                <p class="description">Delete inquiry (Public)</p>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="section" id="gallery">
+            <h2 class="section-title">🖼️ Gallery</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/gallery</span>
+                <p class="description">Get all gallery items (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/gallery/:id</span>
+                <p class="description">Get gallery item by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/gallery</span>
+                <p class="description">Create gallery item (Public)</p>
+                
+                <h4>Request (multipart/form-data):</h4>
+                <div class="code-block">{
+  "name": "Gallery Name",
+  "description": "Gallery description",
+  "images": [file1, file2, ...] // Max 10 files
+}</div>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/gallery/:id</span>
+                <p class="description">Update gallery item (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/gallery/:id</span>
+                <p class="description">Delete gallery item (Public)</p>
+            </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="section" id="properties">
+            <h2 class="section-title">🏠 Properties</h2>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/properties</span>
+                <p class="description">Get all properties (Public)</p>
+                
+                <h4>Query Parameters:</h4>
+                <table class="param-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>category</td>
+                        <td>String</td>
+                        <td>Filter by category</td>
+                    </tr>
+                    <tr>
+                        <td>location</td>
+                        <td>String</td>
+                        <td>Filter by location (case-insensitive)</td>
+                    </tr>
+                    <tr>
+                        <td>minPrice</td>
+                        <td>Number</td>
+                        <td>Minimum price filter</td>
+                    </tr>
+                    <tr>
+                        <td>maxPrice</td>
+                        <td>Number</td>
+                        <td>Maximum price filter</td>
+                    </tr>
+                </table>
+                <p><strong>Example:</strong> /api/properties?category=residential&minPrice=100000&maxPrice=500000</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-url">/api/properties/:id</span>
+                <p class="description">Get property by ID (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-url">/api/properties/createProperty</span>
+                <p class="description">Create a new property</p>
+                
+                <h4>Request (multipart/form-data):</h4>
+                <table class="param-table">
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Property name</td>
+                    </tr>
+                    <tr>
+                        <td>price</td>
+                        <td>Number</td>
+                        <td class="required">Yes</td>
+                        <td>Property price</td>
+                    </tr>
+                    <tr>
+                        <td>pricePerGaj</td>
+                        <td>Number</td>
+                        <td class="required">Yes</td>
+                        <td>Price per Gaj</td>
+                    </tr>
+                    <tr>
+                        <td>Gaj</td>
+                        <td>Number</td>
+                        <td class="required">Yes</td>
+                        <td>Total Gaj</td>
+                    </tr>
+                    <tr>
+                        <td>totalPrice</td>
+                        <td>Number</td>
+                        <td class="required">Yes</td>
+                        <td>Total price</td>
+                    </tr>
+                    <tr>
+                        <td>location</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Property location</td>
+                    </tr>
+                    <tr>
+                        <td>shortDescription</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Short description</td>
+                    </tr>
+                    <tr>
+                        <td>features</td>
+                        <td>Array/String</td>
+                        <td class="required">Yes</td>
+                        <td>Property features (can be JSON string or array)</td>
+                    </tr>
+                    <tr>
+                        <td>category</td>
+                        <td>String</td>
+                        <td class="required">Yes</td>
+                        <td>Property category</td>
+                    </tr>
+                    <tr>
+                        <td>images</td>
+                        <td>Files</td>
+                        <td class="required">Yes</td>
+                        <td>Property images (max 10 files, 5MB each)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-url">/api/properties/:id</span>
+                <p class="description">Update property (Public)</p>
+            </div>
+
+            <div class="endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-url">/api/properties/:id</span>
+                <p class="description">Delete property (Public)</p>
+            </div>
+        </div>
+
+        <!-- Common Responses -->
+        <div class="section">
+            <h2 class="section-title">📋 Common Responses</h2>
+
+            <div class="response-example">
+                <strong>Success Response Format:</strong>
+                <div class="code-block">{
+  "success": true,
+  "message": "Operation successful",
+  "data": { ... }
+}</div>
+            </div>
+
+            <div class="error-example">
+                <strong>Error Response Format:</strong>
+                <div class="code-block">{
+  "success": false,
+  "message": "Error message",
+  "error": "Detailed error description"
+}</div>
+            </div>
+
+            <h3>Status Codes:</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>200</strong> - Success</li>
+                <li><strong>201</strong> - Created</li>
+                <li><strong>400</strong> - Bad Request (Validation Error)</li>
+                <li><strong>401</strong> - Unauthorized (Missing/Invalid Token)</li>
+                <li><strong>403</strong> - Forbidden (Admin Only)</li>
+                <li><strong>404</strong> - Not Found</li>
+                <li><strong>500</strong> - Internal Server Error</li>
+            </ul>
+        </div>
+
+        <!-- Authentication Info -->
+        <div class="section">
+            <h2 class="section-title">🔑 Authentication</h2>
+            <p><strong>Note:</strong> Most endpoints are now public and don't require authentication. Only the following endpoints require authentication:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>GET /api/auth/profile - Get user profile</li>
+                <li>PUT /api/auth/profile - Update user profile</li>
+                <li>GET /api/auth/users - Get all users (Admin only)</li>
+                <li>DELETE /api/auth/users/:id - Delete user (Admin only)</li>
+            </ul>
+            <p style="margin-top: 15px;">For authenticated endpoints, include the JWT token in the Authorization header:</p>
+            <div class="code-block">Authorization: Bearer {your_jwt_token}</div>
+            <p style="margin-top: 15px;">Get your token by registering or logging in through the <a href="#auth">Authentication endpoints</a>.</p>
+        </div>
+
+        <!-- File Upload Info -->
+        <div class="section">
+            <h2 class="section-title">📤 File Upload</h2>
+            <p><strong>Supported Image Formats:</strong> jpeg, jpg, png, webp, gif, avif</p>
+            <p><strong>File Size Limit:</strong> 5MB per file</p>
+            <p><strong>Max Files:</strong> 10 files (for multiple upload endpoints)</p>
+            <p><strong>Content-Type:</strong> Use <code>multipart/form-data</code> for file uploads</p>
+            <p style="margin-top: 15px;"><strong>Image Access:</strong> Uploaded images are accessible at:</p>
+            <div class="code-block">http://localhost:5000/Uploads/{filename}</div>
+        </div>
+
+        <footer style="text-align: center; padding: 30px; color: white; margin-top: 30px;">
+            <p>© 2024 Sonu Bhiya Alwar Project - API Documentation</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update base URL based on current location
+        if (window.location.protocol === 'file:') {
+            document.getElementById('baseUrl').textContent = 'http://localhost:5000';
+        } else {
+            const baseUrl = window.location.origin.replace(/\/[^\/]*$/, '') || 'http://localhost:5000';
+            document.getElementById('baseUrl').textContent = baseUrl;
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
