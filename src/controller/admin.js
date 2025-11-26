@@ -171,7 +171,7 @@ const updateAdminProfile = async (req, res) => {
         
         // Handle profile picture upload
         if (req.file) {
-            updateData.profilePicture = `/Uploads/${req.file.filename}`;
+            updateData.profilePicture = `${req.file.filename}`;
         }
         
         updateData.updatedAt = Date.now();

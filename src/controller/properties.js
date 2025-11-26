@@ -3,7 +3,7 @@ const Property = require('../model/properties');
 // Helper function to process images
 const processImages = (files, bodyImages) => {
     if (files && files.length > 0) {
-        return files.map(file => `/Uploads/${file.filename}`);
+        return files.map(file => `${file.filename}`);
     }
     if (bodyImages) {
         return Array.isArray(bodyImages) ? bodyImages : [bodyImages];

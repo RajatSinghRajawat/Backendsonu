@@ -5,7 +5,7 @@ const createBlog = async (req, res) => {
         const { name, author, description, content, category, date, excerpt, subHeadings, quotes, highlightPoints } = req.body;
         
         // Process image
-        const image = req.file ? `/Uploads/${req.file.filename}` : req.body.image;
+        const image = req.file ? `${req.file.filename}` : req.body.image;
         
         // Validate required fields
         if (!name || !name.trim()) {
@@ -200,7 +200,7 @@ const updateBlog = async (req, res) => {
         
         // Process image
         if (req.file) {
-            updateData.image = `/Uploads/${req.file.filename}`;
+            updateData.image = `${req.file.filename}`;
         } else if (req.body.image) {
             updateData.image = req.body.image;
         }

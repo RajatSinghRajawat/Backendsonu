@@ -22,7 +22,7 @@ const createGallery = async (req, res) => {
         // Process images
         let images = [];
         if (req.files && req.files.length > 0) {
-            images = req.files.map(file => `/Uploads/${file.filename}`);
+            images = req.files.map(file => `${file.filename}`);
         } else if (req.body.images) {
             images = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
         }
@@ -132,7 +132,7 @@ const updateGallery = async (req, res) => {
         // Process images - only update if new files are uploaded
         if (req.files && req.files.length > 0) {
             // New files uploaded, replace images
-            updateData.images = req.files.map(file => `/Uploads/${file.filename}`);
+            updateData.images = req.files.map(file => `${file.filename}`);
         }
         // If no files uploaded, keep existing images (don't update images field)
         

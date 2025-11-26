@@ -3,7 +3,7 @@ const Testimonial = require('../model/testinomials');
 const createTestimonial = async (req, res) => {
     try {
         const { name, title, text, rating, status } = req.body;
-        const image = req.file ? `/Uploads/${req.file.filename}` : req.body.image;
+        const image = req.file ? `${req.file.filename}` : req.body.image;
         
         // Validate required fields
         if (!name || !title || !text || !rating) {
@@ -140,7 +140,7 @@ const updateTestimonial = async (req, res) => {
         
         // Process image
         if (req.file) {
-            updateData.image = `/Uploads/${req.file.filename}`;
+            updateData.image = `${req.file.filename}`;
         } else if (req.body.image) {
             updateData.image = req.body.image;
         }
