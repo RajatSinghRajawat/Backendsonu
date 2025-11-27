@@ -55,7 +55,8 @@ const createFeedback = async (req, res) => {
             name: name.trim(), 
             email: email.trim().toLowerCase(), 
             message: message.trim(),
-            rating: ratingNum
+            rating: ratingNum,
+            status: 'pending' // Default status
         });
         
         await feedback.save();
@@ -75,7 +76,29 @@ const createFeedback = async (req, res) => {
     }
 };
 
+// Public route - get only approved feedbacks
 const getAllFeedbacks = async (req, res) => {
+    try {
+        const feedbacks = await Feedback.find({ status: 'approved' })
+            .sort({ createdAt: -1 })
+            .select('-__v');
+        res.status(200).json({ 
+            success: true, 
+            count: feedbacks.length, 
+            data: feedbacks 
+        });
+    } catch (error) {
+        console.error('Error fetching feedbacks:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error fetching feedbacks', 
+            error: error.message 
+        });
+    }
+};
+
+// Admin route - get all feedbacks
+const getAllFeedbacksAdmin = async (req, res) => {
     try {
         const feedbacks = await Feedback.find()
             .sort({ createdAt: -1 })
@@ -171,6 +194,18 @@ const updateFeedback = async (req, res) => {
             updateData.rating = ratingNum;
         }
         
+        // Process status
+        if (req.body.status) {
+            const validStatuses = ['pending', 'approved', 'declined'];
+            if (!validStatuses.includes(req.body.status)) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Status must be pending, approved, or declined' 
+                });
+            }
+            updateData.status = req.body.status;
+        }
+        
         // Update feedback
         const feedback = await Feedback.findByIdAndUpdate(
             id, 
@@ -235,5 +270,64 @@ const deleteFeedback = async (req, res) => {
     }
 };
 
-module.exports = { createFeedback, getAllFeedbacks, getFeedbackById, updateFeedback, deleteFeedback };
+// Update feedback status only
+const updateFeedbackStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        
+        // Validate ID
+        if (!id || id.length !== 24) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid feedback ID' 
+            });
+        }
+        
+        // Validate status
+        const validStatuses = ['pending', 'approved', 'declined'];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Status must be pending, approved, or declined' 
+            });
+        }
+        
+        const feedback = await Feedback.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true, runValidators: true }
+        ).select('-__v');
+        
+        if (!feedback) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Feedback not found' 
+            });
+        }
+        
+        res.status(200).json({ 
+            success: true, 
+            message: 'Feedback status updated successfully', 
+            data: feedback 
+        });
+    } catch (error) {
+        console.error('Error updating feedback status:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error updating feedback status', 
+            error: error.message 
+        });
+    }
+};
+
+module.exports = { 
+    createFeedback, 
+    getAllFeedbacks, 
+    getAllFeedbacksAdmin,
+    getFeedbackById, 
+    updateFeedback, 
+    updateFeedbackStatus,
+    deleteFeedback 
+};
 
