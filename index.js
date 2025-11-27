@@ -31,6 +31,7 @@ app.use('/api/inquiry', require('./src/routes/inquiery'));
 app.use('/api/gallery', require('./src/routes/gallery'));
 app.use('/api/properties', require('./src/routes/properties'));
 app.use('/api/team', require('./src/routes/team'));
+app.use('/api/feedbacks', require('./src/routes/feedbacks'));
 
 
 // 404 handler
