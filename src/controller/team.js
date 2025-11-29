@@ -22,7 +22,7 @@ const createTeamMember = async (req, res) => {
         // Process image
         let image = '';
         if (req.file) {
-            image = `${req.file.filename}`;
+            image = `/uploads/${req.file.filename}`;
         } else if (req.body.image) {
             image = req.body.image;
         }
@@ -131,7 +131,7 @@ const updateTeamMember = async (req, res) => {
         
         // Process image - only update if new file is uploaded
         if (req.file) {
-            updateData.image = `${req.file.filename}`;
+            updateData.image = `/uploads/${req.file.filename}`;
         } else if (req.body.image) {
             updateData.image = req.body.image;
         }

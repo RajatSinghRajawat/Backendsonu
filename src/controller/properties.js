@@ -1,105 +1,94 @@
 const Property = require('../model/properties');
 
-// Helper function to process images
-const processImages = (files, bodyImages) => {
-    if (files && files.length > 0) {
-        return files.map(file => `${file.filename}`);
-    }
-    if (bodyImages) {
-        return Array.isArray(bodyImages) ? bodyImages : [bodyImages];
-    }
-    return [];
-};
+// Ensure image paths always start with "/uploads/filename"
+const withUploadsPrefix = (imagePath) => {
+    if (!imagePath) return imagePath;
 
-// Helper function to process features
-const processFeatures = (features) => {
-    if (!features) return [];
-    
-    if (Array.isArray(features)) {
-        return features.filter(f => f && f.trim());
+    const clean = String(imagePath).replace(/^\/+/, '');
+    if (clean.toLowerCase().startsWith('uploads/')) {
+        return `/${clean}`;
     }
-    
-    if (typeof features === 'string') {
-        try {
-            const parsed = JSON.parse(features);
-            return Array.isArray(parsed) ? parsed.filter(f => f && f.trim()) : [features.trim()];
-        } catch (e) {
-            // If not JSON, treat as comma-separated string
-            return features.split(',').map(f => f.trim()).filter(f => f);
-        }
-    }
-    
-    return [String(features)];
-};
-
-// Helper function to validate required fields
-const validatePropertyData = (data) => {
-    const { name, pricePerGaj, Gaj, totalPrice, location, shortDescription, category } = data;
-    const missing = [];
-    
-    if (!name) missing.push('name');
-    if (!pricePerGaj && pricePerGaj !== 0) missing.push('pricePerGaj');
-    if (!Gaj && Gaj !== 0) missing.push('Gaj');
-    if (!totalPrice && totalPrice !== 0) missing.push('totalPrice');
-    if (!location) missing.push('location');
-    if (!shortDescription) missing.push('shortDescription');
-    if (!category) missing.push('category');
-    
-    return missing;
+    return `/uploads/${clean}`;
 };
 
 const createProperty = async (req, res) => {
     try {
-        const { name, pricePerGaj, Gaj, totalPrice, location, shortDescription, features, category } = req.body;
-        
-        // Validate required fields
-        const missingFields = validatePropertyData(req.body);
-        if (missingFields.length > 0) {
-            return res.status(400).json({ 
-                success: false, 
-                message: `Missing required fields: ${missingFields.join(', ')}` 
+        const {
+            name,
+            pricePerGaj,
+            Gaj,
+            totalPrice,
+            location,
+            shortDescription,
+            features,
+            category,
+        } = req.body;
+
+        // Simple required field check (backend schema will also validate)
+        if (!name || !pricePerGaj || !Gaj || !totalPrice || !location || !shortDescription || !category) {
+            return res.status(400).json({
+                success: false,
+                message: 'name, pricePerGaj, Gaj, totalPrice, location, shortDescription, category are required',
             });
         }
-        
-        // Process images
-        const images = processImages(req.files, req.body.images);
-        if (images.length === 0) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'At least one image is required' 
+
+        // Simple image handling:
+        // - if Multer uploaded files, use their filenames with /uploads/ prefix
+        // - otherwise, expect `images` from body as array or single string and normalize
+        let images = [];
+        if (req.files && req.files.length > 0) {
+            images = req.files.map((file) => withUploadsPrefix(file.filename));
+        } else if (req.body.images) {
+            const bodyImages = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
+            images = bodyImages.map(withUploadsPrefix);
+        }
+
+        if (!images.length) {
+            return res.status(400).json({
+                success: false,
+                message: 'At least one image is required',
             });
         }
-        
-        // Process features
-        const featuresArray = processFeatures(features);
-        
-        // Create property
+
+        // Simple features handling:
+        // - array -> keep as is
+        // - string -> split by comma
+        let featuresArray = [];
+        if (Array.isArray(features)) {
+            featuresArray = features;
+        } else if (typeof features === 'string' && features.trim()) {
+            featuresArray = features
+                .split(',')
+                .map((f) => f.trim())
+                .filter(Boolean);
+        }
+
         const property = new Property({
             name: name.trim(),
             pricePerGaj: Number(pricePerGaj),
             Gaj: Number(Gaj),
             totalPrice: Number(totalPrice),
-            price: Number(totalPrice), // Set price = totalPrice for backward compatibility
+            price: Number(totalPrice), // keep same behaviour
             location: location.trim(),
             shortDescription: shortDescription.trim(),
             features: featuresArray,
             images,
-            category: category.trim()
+            category: category.trim(),
         });
-        
+
         await property.save();
-        
-        res.status(201).json({ 
-            success: true, 
-            message: 'Property created successfully', 
-            data: property 
+
+        res.status(201).json({
+            success: true,
+            message: 'Property created successfully',
+            data: property,
         });
     } catch (error) {
         console.error('Error creating property:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error creating property', 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            message: 'Error creating property',
+            error: error.message,
         });
     }
 };
@@ -183,68 +172,78 @@ const updateProperty = async (req, res) => {
     try {
         const { id } = req.params;
         const updateData = {};
-        
+
         // Validate ID
         if (!id || id.length !== 24) {
-            return res.status(400).json({ 
-                success: false, 
-                message: 'Invalid property ID' 
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid property ID',
             });
         }
-        
-        // Process text fields
+
+        // Simple text fields
         if (req.body.name) updateData.name = req.body.name.trim();
         if (req.body.location) updateData.location = req.body.location.trim();
         if (req.body.shortDescription) updateData.shortDescription = req.body.shortDescription.trim();
         if (req.body.category) updateData.category = req.body.category.trim();
-        
-        // Process numeric fields
+
+        // Simple numeric fields
         if (req.body.pricePerGaj !== undefined) updateData.pricePerGaj = Number(req.body.pricePerGaj);
         if (req.body.Gaj !== undefined) updateData.Gaj = Number(req.body.Gaj);
         if (req.body.totalPrice !== undefined) {
             updateData.totalPrice = Number(req.body.totalPrice);
-            updateData.price = Number(req.body.totalPrice); // Update price = totalPrice
+            updateData.price = Number(req.body.totalPrice);
         }
-        
-        // Process images
-        const images = processImages(req.files, req.body.images);
-        if (images.length > 0) {
-            updateData.images = images;
+
+        // Simple image update:
+        // - if new files uploaded, replace images with new filenames (with /uploads/ prefix)
+        // - else if `images` in body, normalize and use that
+        if (req.files && req.files.length > 0) {
+            updateData.images = req.files.map((file) => withUploadsPrefix(file.filename));
+        } else if (req.body.images) {
+            const bodyImages = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
+            updateData.images = bodyImages.map(withUploadsPrefix);
         }
-        
-        // Process features
+
+        // Simple features update
         if (req.body.features !== undefined) {
-            updateData.features = processFeatures(req.body.features);
+            if (Array.isArray(req.body.features)) {
+                updateData.features = req.body.features;
+            } else if (typeof req.body.features === 'string' && req.body.features.trim()) {
+                updateData.features = req.body.features
+                    .split(',')
+                    .map((f) => f.trim())
+                    .filter(Boolean);
+            } else {
+                updateData.features = [];
+            }
         }
-        
-        // Update updatedAt
+
         updateData.updatedAt = Date.now();
-        
-        // Update property
-        const property = await Property.findByIdAndUpdate(
-            id, 
-            updateData, 
-            { new: true, runValidators: true }
-        ).select('-__v');
-        
+
+        const property = await Property.findByIdAndUpdate(id, updateData, {
+            new: true,
+            runValidators: true,
+        }).select('-__v');
+
         if (!property) {
-            return res.status(404).json({ 
-                success: false, 
-                message: 'Property not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'Property not found',
             });
         }
-        
-        res.status(200).json({ 
-            success: true, 
-            message: 'Property updated successfully', 
-            data: property 
+
+        res.status(200).json({
+            success: true,
+            message: 'Property updated successfully',
+            data: property,
         });
     } catch (error) {
         console.error('Error updating property:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error updating property', 
-            error: error.message 
+        res.status(500).json({
+            success: false,
+            message: 'Error updating property',
+            error: error.message,
         });
     }
 };

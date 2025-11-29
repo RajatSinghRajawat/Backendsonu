@@ -19,8 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files (uploaded images)
-app.use(express.static("public/Uploads"))
-
+app.use('/uploads', express.static('public/Uploads'));
 // Routes
 app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/admin', require('./src/routes/admin'));
