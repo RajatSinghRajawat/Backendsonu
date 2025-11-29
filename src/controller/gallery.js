@@ -1,5 +1,16 @@
 const Gallery = require('../model/gallery');
 
+// Ensure image paths always start with "/uploads/filename"
+const withUploadsPrefix = (imagePath) => {
+    if (!imagePath) return imagePath;
+
+    const clean = String(imagePath).replace(/^\/+/, '');
+    if (clean.toLowerCase().startsWith('uploads/')) {
+        return `/${clean}`;
+    }
+    return `/uploads/${clean}`;
+};
+
 const createGallery = async (req, res) => {
     try {
         const { name, description } = req.body;
@@ -19,12 +30,13 @@ const createGallery = async (req, res) => {
             });
         }
         
-        // Process images
+        // Process images (normalize to start with /uploads/)
         let images = [];
         if (req.files && req.files.length > 0) {
-            images = req.files.map(file => `${file.filename}`);
+            images = req.files.map((file) => withUploadsPrefix(file.filename));
         } else if (req.body.images) {
-            images = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
+            const bodyImages = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
+            images = bodyImages.map(withUploadsPrefix);
         }
         
         if (images.length === 0) {
@@ -131,8 +143,8 @@ const updateGallery = async (req, res) => {
         
         // Process images - only update if new files are uploaded
         if (req.files && req.files.length > 0) {
-            // New files uploaded, replace images
-            updateData.images = req.files.map(file => `${file.filename}`);
+            // New files uploaded, replace images with normalized paths
+            updateData.images = req.files.map((file) => withUploadsPrefix(file.filename));
         }
         // If no files uploaded, keep existing images (don't update images field)
         
