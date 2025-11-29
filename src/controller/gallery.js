@@ -10,7 +10,7 @@ const withUploadsPrefix = (imagePath) => {
     }
     return `/uploads/${clean}`;
 };
-
+// lop
 const createGallery = async (req, res) => {
     try {
         const { name, description } = req.body;
