@@ -49,4 +49,13 @@ const deleteContact = async (req, res) => {
     }
 };
 
-module.exports = { createContact, getAllContacts, getContactById, updateContact, deleteContact };
+const getContactCount = async (req, res) => {
+    try {
+        const count = await Contact.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching contact count', error: error.message });
+    }
+};
+
+module.exports = { createContact, getAllContacts, getContactById, updateContact, deleteContact, getContactCount };

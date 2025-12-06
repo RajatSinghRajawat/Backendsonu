@@ -112,4 +112,13 @@ const deleteInquiry = async (req, res) => {
     }
 };
 
-module.exports = { createInquiry, getAllInquiries, getInquiryById, updateInquiry, deleteInquiry };
+const getInquiryCount = async (req, res) => {
+    try {
+        const count = await Inquiry.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching inquiry count', error: error.message });
+    }
+};
+
+module.exports = { createInquiry, getAllInquiries, getInquiryById, updateInquiry, deleteInquiry, getInquiryCount };

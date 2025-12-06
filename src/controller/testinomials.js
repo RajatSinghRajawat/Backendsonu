@@ -219,4 +219,18 @@ const deleteTestimonial = async (req, res) => {
     }
 };
 
-module.exports = { createTestimonial, getAllTestimonials, getTestimonialById, updateTestimonial, deleteTestimonial };
+const getTestimonialCount = async (req, res) => {
+    try {
+        const count = await Testimonial.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (error) {
+        console.error('Error fetching testimonial count:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error fetching testimonial count', 
+            error: error.message 
+        });
+    }
+};
+
+module.exports = { createTestimonial, getAllTestimonials, getTestimonialById, updateTestimonial, deleteTestimonial, getTestimonialCount };

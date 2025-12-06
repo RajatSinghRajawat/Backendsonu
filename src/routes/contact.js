@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { createContact, getAllContacts, getContactById, updateContact, deleteContact } = require('../controller/contact');
+const { createContact, getAllContacts, getContactById, updateContact, deleteContact, getContactCount } = require('../controller/contact');
 const { authenticate, isAdmin } = require('../middleware/auth');
 const { validateContact } = require('../middleware/validation');
 
 router.post('/', validateContact, createContact);
+router.get('/count', getContactCount);
 router.get('/',  getAllContacts);
 router.get('/:id', getContactById);
 router.put('/:id', updateContact);

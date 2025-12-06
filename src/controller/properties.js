@@ -283,4 +283,18 @@ const deleteProperty = async (req, res) => {
     }
 };
 
-module.exports = { createProperty, getAllProperties, getPropertyById, updateProperty, deleteProperty };
+const getPropertyCount = async (req, res) => {
+    try {
+        const count = await Property.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (error) {
+        console.error('Error fetching property count:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error fetching property count', 
+            error: error.message 
+        });
+    }
+};
+
+module.exports = { createProperty, getAllProperties, getPropertyById, updateProperty, deleteProperty, getPropertyCount };
