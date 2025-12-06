@@ -7,10 +7,12 @@ const {
     getFeedbackById, 
     updateFeedback, 
     updateFeedbackStatus,
-    deleteFeedback 
+    deleteFeedback,
+    getFeedbackCount
 } = require('../controller/feedbacks');
 
 // Public routes
+router.get('/count', getFeedbackCount);
 router.get('/', getAllFeedbacks); // Only approved feedbacks
 router.post('/', createFeedback); // Create new feedback
 

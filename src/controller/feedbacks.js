@@ -325,6 +325,20 @@ const updateFeedbackStatus = async (req, res) => {
     }
 };
 
+const getFeedbackCount = async (req, res) => {
+    try {
+        const count = await Feedback.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (error) {
+        console.error('Error fetching feedback count:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error fetching feedback count', 
+            error: error.message 
+        });
+    }
+};
+
 module.exports = { 
     createFeedback, 
     getAllFeedbacks, 
@@ -332,6 +346,7 @@ module.exports = {
     getFeedbackById, 
     updateFeedback, 
     updateFeedbackStatus,
-    deleteFeedback 
+    deleteFeedback,
+    getFeedbackCount
 };
 
